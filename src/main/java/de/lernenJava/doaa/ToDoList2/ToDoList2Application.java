@@ -8,8 +8,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EnableJpaRepositories
 public class ToDoList2Application {
 
-	public static void main(String[] args) {
-		SpringApplication.run(ToDoList2Application.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(ToDoList2Application.class, args);
+    }
 
 }
