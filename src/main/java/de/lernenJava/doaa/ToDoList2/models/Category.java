@@ -1,24 +1,24 @@
 package de.lernenJava.doaa.ToDoList2.models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;   //[REVIEW] remove unused imports
 
 import javax.persistence.*;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+
 @Entity
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int categoryId;
+    private int categoryId; //[REVIEW] please remove the prefix "category" from all attribute names.
+    // It is made redundant by the class name;
     private String categoryName;
-    @OneToMany(mappedBy = "category")
+    @OneToMany(mappedBy = "category")   //[REVIEW] I prefer to have a blank line before annotated attributes
     @JsonIgnoreProperties("category")
     private List<Tasks> categoryTasks;
-  // private Tasks task;
+    // private Tasks task;  //[REVIEW] always delete unused code
 
+    //[REVIEW] please replace all these setters and getters with Lombok
     public int getCategoryId() {
         return categoryId;
     }
@@ -43,17 +43,11 @@ public class Category {
         this.categoryTasks = categoryTasks;
     }
 
-    public void addTask(Tasks task)
-    {
-        if (categoryTasks==null)
-        {
-            categoryTasks =new CopyOnWriteArrayList<>();
+    public void addTask(Tasks task) {   //[REVIEW] this method is not used anywhere. Please delete it.
+        if (categoryTasks == null) {
+            categoryTasks = new CopyOnWriteArrayList<>();
+            categoryTasks.add(task);    //[REVIEW] you can remove this line from the if and else and add it after the if
+        } else
             categoryTasks.add(task);
-
-        }
-        else
-            categoryTasks.add(task);
-    }
-
-
+    }   //[REVIEW] No need for empty lines between these two braces
 }

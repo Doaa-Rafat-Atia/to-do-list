@@ -4,20 +4,22 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import java.util.Date;
+
 @Entity
-public class Tasks {
+public class Tasks {    //[REVIEW] Please use singular form for class names (task, not taskS)
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
-    private String taskDescription;
-    private Date taskDate;
+    private String taskDescription; //[REVIEW] please remove the prefix "task"; It is made redundant by class name.
+    private Date taskDate;  //[REVIEW] please use Java 8's LocalDate or ZonedDate.
+    // They are much better than the legacy Date classes.
     @ManyToOne
     @JsonIgnoreProperties("categoryTasks")
     private Category category;
 
     public String getTaskDescription() {
         return taskDescription;
-    }
+    }   //[REVIEW] Lombok :D
 
     public void setTaskDescription(String taskDescription) {
         this.taskDescription = taskDescription;
