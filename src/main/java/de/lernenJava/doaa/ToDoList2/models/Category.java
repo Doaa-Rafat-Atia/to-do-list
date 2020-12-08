@@ -16,8 +16,7 @@ public class Category {
     private String categoryName;
     @OneToMany(mappedBy = "category")
     @JsonIgnoreProperties("category")
-    private List<Tasks> categoryTasks;
-  // private Tasks task;
+    private List<Tasks> categoryTasks= new CopyOnWriteArrayList<>();
 
     public int getCategoryId() {
         return categoryId;
@@ -45,11 +44,9 @@ public class Category {
 
     public void addTask(Tasks task)
     {
-        if (categoryTasks==null)
+        if (categoryTasks.isEmpty())
         {
-            categoryTasks =new CopyOnWriteArrayList<>();
             categoryTasks.add(task);
-
         }
         else
             categoryTasks.add(task);

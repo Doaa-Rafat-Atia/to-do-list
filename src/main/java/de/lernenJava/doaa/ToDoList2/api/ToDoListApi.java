@@ -1,6 +1,7 @@
 package de.lernenJava.doaa.ToDoList2.api;
 
 
+import de.lernenJava.doaa.ToDoList2.exceptions.CategoryNotFoundException;
 import de.lernenJava.doaa.ToDoList2.models.Category;
 import de.lernenJava.doaa.ToDoList2.models.CategoryTasksDTO;
 import de.lernenJava.doaa.ToDoList2.models.Tasks;
@@ -8,6 +9,8 @@ import de.lernenJava.doaa.ToDoList2.toDoServices.CategoryServices;
 import de.lernenJava.doaa.ToDoList2.toDoServices.TasksServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping
@@ -28,12 +31,28 @@ public class ToDoListApi {
    {
        return tasksServices.findAllTasks();
    }
+   @GetMapping("/getAllCategories")
+   public Iterable<Category> getAllCategories()
+   {
+      return  categoryServices.getAllCategories();
+   }
+    @GetMapping("/getCategoryByName")
+    public Category getCategoryByName(@RequestParam String categoryName)
+    { return categoryServices.getCategoryByName(categoryName);}
+@PutMapping("/updateCategory/{categoryName}")
+public void updateCategory(@PathVariable("categoryName") String categoryName, @RequestBody Category category)
+{
+    try {
+         categoryServices.updateCategory(category,categoryName);
+    } catch (CategoryNotFoundException e) {
+        e.printStackTrace();
+    }
+
+}
     /* @PostMapping("/addMultipleTasks")
     public void addTasksToCategory(@RequestBody CategoryTasksDTO categoryTasksDTO)
     {
         categoryServices.addTasksToCategory(categoryTasksDTO.getTasks(),categoryTasksDTO.getCategoryName());
     }
-    @GetMapping("/getCategoryByName")
-    public Category getCategoryByName(@RequestParam String categoryName)
-    { return categoryServices.getCategory(categoryName);}*/
+   */
 }

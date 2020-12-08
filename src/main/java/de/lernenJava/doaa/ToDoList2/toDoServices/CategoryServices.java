@@ -2,6 +2,7 @@ package de.lernenJava.doaa.ToDoList2.toDoServices;
 
 import de.lernenJava.doaa.ToDoList2.dataAccessObject.CategoryDAO;
 import de.lernenJava.doaa.ToDoList2.dataAccessObject.TaskDAO;
+import de.lernenJava.doaa.ToDoList2.exceptions.CategoryNotFoundException;
 import de.lernenJava.doaa.ToDoList2.models.Category;
 import de.lernenJava.doaa.ToDoList2.models.Tasks;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,7 @@ public class CategoryServices {
         categoryCount++;
         return category;*/
         categoryList.add(category);
+        taskDAO.saveAll(category.getCategoryTasks());
         return categoryDAO.save(category);
     }
     public List<Category> getAllCategories()
@@ -49,21 +51,36 @@ public class CategoryServices {
     }});
 
    }
-  /*  public void addTasksToCategory(List<Tasks>tasks,String categoryName)
-    {
-        categoryList.stream()
-                .filter(category -> category.getCategoryName().equals(categoryName))
-                .findAny()
-                .get()
-                .setCategoryTasks(tasks);
-    }
 
-    public Category getCategory(String categoryName)
+    public Category getCategoryByName(String categoryName)
     {
         return categoryList.stream()
                 .filter(category -> category.getCategoryName().equals(categoryName))
                 .findAny()
                 .get();
     }
-    //*/
+   public Category updateCategory(Category newCategory,String newCategoryName ) throws CategoryNotFoundException {
+       for(Category category : categoryList) {
+           if(category.getCategoryName().equals(newCategoryName))
+           {
+               category.setCategoryName(newCategory.getCategoryName());
+               category.setCategoryTasks(newCategory.getCategoryTasks());
+
+               categoryDAO.save(category);
+               taskDAO.saveAll(category.getCategoryTasks());
+               return category;
+           }
+       }
+       throw new CategoryNotFoundException();
+   }
+
+       /*categoryList.stream()
+               .filter(category -> category.getCategoryName().equals(categoryName))
+               .map(category -> {
+                   category.setCategoryName(newCategory.getCategoryName());
+                   category.setCategoryTasks(newCategory.getCategoryTasks());
+                   return categoryDAO.save(category);
+               }).findAny().get();
+
+   }*/
 }
