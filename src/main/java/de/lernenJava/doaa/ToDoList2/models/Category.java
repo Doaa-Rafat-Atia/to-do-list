@@ -1,9 +1,6 @@
 package de.lernenJava.doaa.ToDoList2.models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
 
 import javax.persistence.*;
 import java.util.List;
@@ -14,9 +11,9 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int categoryId;
     private String categoryName;
-    @OneToMany(mappedBy = "category")
+    @OneToMany( mappedBy = "category",cascade = CascadeType.ALL)
     @JsonIgnoreProperties("category")
-    private List<Tasks> categoryTasks= new CopyOnWriteArrayList<>();
+    private List<Task> categoryTasks= new CopyOnWriteArrayList<>();
 
     public int getCategoryId() {
         return categoryId;
@@ -34,15 +31,15 @@ public class Category {
         this.categoryName = categoryName;
     }
 
-    public List<Tasks> getCategoryTasks() {
+    public List<Task> getCategoryTasks() {
         return categoryTasks;
     }
 
-    public void setCategoryTasks(List<Tasks> categoryTasks) {
+    public void setCategoryTasks(List<Task> categoryTasks) {
         this.categoryTasks = categoryTasks;
     }
 
-    public void addTask(Tasks task)
+    public void addTask(Task task)
     {
         if (categoryTasks.isEmpty())
         {

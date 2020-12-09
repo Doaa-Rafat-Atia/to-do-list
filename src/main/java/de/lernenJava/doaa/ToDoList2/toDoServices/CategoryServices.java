@@ -4,12 +4,10 @@ import de.lernenJava.doaa.ToDoList2.dataAccessObject.CategoryDAO;
 import de.lernenJava.doaa.ToDoList2.dataAccessObject.TaskDAO;
 import de.lernenJava.doaa.ToDoList2.exceptions.CategoryNotFoundException;
 import de.lernenJava.doaa.ToDoList2.models.Category;
-import de.lernenJava.doaa.ToDoList2.models.Tasks;
+import de.lernenJava.doaa.ToDoList2.models.Task;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Controller;
 
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -22,7 +20,7 @@ public class CategoryServices {
 
     private List<Category>categoryList= new CopyOnWriteArrayList<>();
     private int categoryCount=1;
-    private Tasks temp;
+    private Task temp;
 
     public Category addCategory(Category category) {
        /* category.setCategoryId(categoryCount);
@@ -38,7 +36,7 @@ public class CategoryServices {
         //return categoryList;
         return categoryDAO.findAll();
     }
-    public void addSingleTaskToCategory(Tasks task,String categoryName)
+    public void addSingleTaskToCategory(Task task, String categoryName)
     {
 
    categoryList.stream().forEach(category ->
@@ -47,7 +45,7 @@ public class CategoryServices {
         task.setCategory(category);
 //        category.addTask(task);
         taskDAO.save(task);
-//    categoryDAO.save(category);
+   categoryDAO.save(category);
     }});
 
    }
@@ -59,9 +57,9 @@ public class CategoryServices {
                 .findAny()
                 .get();
     }
-   public Category updateCategory(Category newCategory,String newCategoryName ) throws CategoryNotFoundException {
+   public Category updateCategory(Category newCategory,String currentCategoryName ) throws CategoryNotFoundException {
        for(Category category : categoryList) {
-           if(category.getCategoryName().equals(newCategoryName))
+           if(category.getCategoryName().equals(currentCategoryName))
            {
                category.setCategoryName(newCategory.getCategoryName());
                category.setCategoryTasks(newCategory.getCategoryTasks());

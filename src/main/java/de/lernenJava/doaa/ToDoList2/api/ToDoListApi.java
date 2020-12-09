@@ -4,13 +4,11 @@ package de.lernenJava.doaa.ToDoList2.api;
 import de.lernenJava.doaa.ToDoList2.exceptions.CategoryNotFoundException;
 import de.lernenJava.doaa.ToDoList2.models.Category;
 import de.lernenJava.doaa.ToDoList2.models.CategoryTasksDTO;
-import de.lernenJava.doaa.ToDoList2.models.Tasks;
+import de.lernenJava.doaa.ToDoList2.models.Task;
 import de.lernenJava.doaa.ToDoList2.toDoServices.CategoryServices;
 import de.lernenJava.doaa.ToDoList2.toDoServices.TasksServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping
@@ -27,7 +25,7 @@ public class ToDoListApi {
     public void addSingleTaskToCategory(@RequestBody CategoryTasksDTO categoryTasksDTO)
     {categoryServices.addSingleTaskToCategory(categoryTasksDTO.getTask(),categoryTasksDTO.getCategoryName());}
    @GetMapping("/getAllTasks")
-    public Iterable<Tasks> findAllTasks()
+    public Iterable<Task> findAllTasks()
    {
        return tasksServices.findAllTasks();
    }

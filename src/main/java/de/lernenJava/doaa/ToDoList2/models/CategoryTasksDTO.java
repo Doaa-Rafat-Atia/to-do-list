@@ -4,14 +4,14 @@ import java.util.List;
 
 public class CategoryTasksDTO {
     private String categoryName;
-    private List <Tasks>tasks;
-    private Tasks task;
+    private List <Task>tasks;
+    private Task task;
 
-    public Tasks getTask() {
+    public Task getTask() {
         return task;
     }
 
-    public void setTask(Tasks task) {
+    public void setTask(Task task) {
         this.task = task;
     }
 
@@ -23,11 +23,11 @@ public class CategoryTasksDTO {
         this.categoryName = categoryName;
     }
 
-    public List<Tasks> getTasks() {
+    public List<Task> getTasks() {
         return tasks;
     }
 
-    public void setTasks(List<Tasks> tasks) {
+    public void setTasks(List<Task> tasks) {
         this.tasks = tasks;
     }
 
