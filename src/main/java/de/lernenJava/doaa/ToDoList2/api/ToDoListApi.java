@@ -1,11 +1,12 @@
 package de.lernenJava.doaa.ToDoList2.api;
 
 
+import de.lernenJava.doaa.ToDoList2.DTOs.LocalDateTimeDTO;
 import de.lernenJava.doaa.ToDoList2.exceptions.CategoryNotFoundException;
 import de.lernenJava.doaa.ToDoList2.models.Category;
-import de.lernenJava.doaa.ToDoList2.models.CategoryTasksDTO;
+import de.lernenJava.doaa.ToDoList2.DTOs.CategoryTasksDTO;
 import de.lernenJava.doaa.ToDoList2.models.Task;
-import de.lernenJava.doaa.ToDoList2.toDoServices.CategoryServices;
+import de.lernenJava.doaa.ToDoList2.toDoServices.CategoryService;
 import de.lernenJava.doaa.ToDoList2.toDoServices.TasksServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -14,43 +15,56 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping
 public class ToDoListApi {
     @Autowired
-    CategoryServices categoryServices;
-@Autowired
-    TasksServices tasksServices;
-    @PostMapping(value="/addCategory")
+    private CategoryService categoryService;
+    @Autowired
+    private TasksServices tasksServices;
+    @PostMapping(value="/Category")
     public Category addCategory(@RequestBody Category category)
-    { return categoryServices.addCategory(category);}
+    { return categoryService.addCategory(category);}
 
-   @PostMapping ("/addTask")
+    @PostMapping ("/createTask")
     public void addSingleTaskToCategory(@RequestBody CategoryTasksDTO categoryTasksDTO)
-    {categoryServices.addSingleTaskToCategory(categoryTasksDTO.getTask(),categoryTasksDTO.getCategoryName());}
-   @GetMapping("/getAllTasks")
-    public Iterable<Task> findAllTasks()
+    {
+        categoryService.addSingleTaskToCategory(categoryTasksDTO.getTask(),categoryTasksDTO.getCategoryName());}
+
+    @GetMapping("/getTasks")
+    public Iterable<Task> getAllTasks()
    {
        return tasksServices.findAllTasks();
    }
-   @GetMapping("/getAllCategories")
-   public Iterable<Category> getAllCategories()
+
+   @GetMapping("/getCategories")
+    public Iterable<Category> getAllCategories()
    {
-      return  categoryServices.getAllCategories();
+      return  categoryService.getCategories();
    }
-    @GetMapping("/getCategoryByName")
+
+   @GetMapping("/getCategoryByName")
     public Category getCategoryByName(@RequestParam String categoryName)
-    { return categoryServices.getCategoryByName(categoryName);}
-@PutMapping("/updateCategory/{categoryName}")
-public void updateCategory(@PathVariable("categoryName") String categoryName, @RequestBody Category category)
-{
+    { return categoryService.getCategoryByName(categoryName);}
+
+    @PutMapping("/updateCategory/{categoryName}")
+    public void updateCategory(@PathVariable("categoryName") String categoryName, @RequestBody Category category)
+    {
     try {
-         categoryServices.updateCategory(category,categoryName);
+         categoryService.updateCategory(category,categoryName);
     } catch (CategoryNotFoundException e) {
         e.printStackTrace();
     }
 
-}
-    /* @PostMapping("/addMultipleTasks")
-    public void addTasksToCategory(@RequestBody CategoryTasksDTO categoryTasksDTO)
-    {
-        categoryServices.addTasksToCategory(categoryTasksDTO.getTasks(),categoryTasksDTO.getCategoryName());
     }
-   */
+
+    @GetMapping("/getTaskByDate")
+    public Iterable<Task> getTaskByDate(@RequestBody LocalDateTimeDTO dateTimeDTO)
+   {
+     return tasksServices.getTasksByDate(dateTimeDTO);
+   }
+
+   @PutMapping("/deleteTaskByID/{id}")
+    public void deleteTaskById(@PathVariable("id" ) int id)
+
+   {
+    tasksServices.deleteTaskById(id);
+   }
+
 }

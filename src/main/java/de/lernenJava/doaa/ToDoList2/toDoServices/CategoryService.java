@@ -12,26 +12,26 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 @Controller
-public class CategoryServices {
+public class CategoryService {
     @Autowired
-    CategoryDAO categoryDAO;
+    private  CategoryDAO categoryDAO;
     @Autowired
-    TaskDAO taskDAO;
+    private TaskDAO taskDAO;
 
     private List<Category>categoryList= new CopyOnWriteArrayList<>();
-    private int categoryCount=1;
-    private Task temp;
+
+    public CategoryService(CategoryDAO categoryDAO, TaskDAO taskDAO) {
+        this.categoryDAO = categoryDAO;
+        this.taskDAO = taskDAO;
+    }
 
     public Category addCategory(Category category) {
-       /* category.setCategoryId(categoryCount);
         categoryList.add(category);
-        categoryCount++;
-        return category;*/
-        categoryList.add(category);
-        taskDAO.saveAll(category.getCategoryTasks());
+       taskDAO.saveAll(category.getCategoryTasks());
+
         return categoryDAO.save(category);
     }
-    public List<Category> getAllCategories()
+    public List<Category> getCategories()
     {
         //return categoryList;
         return categoryDAO.findAll();
@@ -39,11 +39,12 @@ public class CategoryServices {
     public void addSingleTaskToCategory(Task task, String categoryName)
     {
 
-   categoryList.stream().forEach(category ->
-    {if (category.getCategoryName().equals(categoryName))
+   categoryList.stream().
+            forEach(category ->
+    {if (category.getCatName().equals(categoryName))
     {
         task.setCategory(category);
-//        category.addTask(task);
+
         taskDAO.save(task);
    categoryDAO.save(category);
     }});
@@ -53,32 +54,27 @@ public class CategoryServices {
     public Category getCategoryByName(String categoryName)
     {
         return categoryList.stream()
-                .filter(category -> category.getCategoryName().equals(categoryName))
+                .filter(category -> category.getCatName().equals(categoryName))
                 .findAny()
                 .get();
     }
    public Category updateCategory(Category newCategory,String currentCategoryName ) throws CategoryNotFoundException {
        for(Category category : categoryList) {
-           if(category.getCategoryName().equals(currentCategoryName))
+           if(category.getCatName().equals(currentCategoryName))
            {
-               category.setCategoryName(newCategory.getCategoryName());
+               category.setCatName(newCategory.getCatName());
+               for(Task t: newCategory.getCategoryTasks()) {
+                   t.setCategory(category);
+
+               }
                category.setCategoryTasks(newCategory.getCategoryTasks());
 
                categoryDAO.save(category);
-               taskDAO.saveAll(category.getCategoryTasks());
+
                return category;
            }
        }
        throw new CategoryNotFoundException();
    }
 
-       /*categoryList.stream()
-               .filter(category -> category.getCategoryName().equals(categoryName))
-               .map(category -> {
-                   category.setCategoryName(newCategory.getCategoryName());
-                   category.setCategoryTasks(newCategory.getCategoryTasks());
-                   return categoryDAO.save(category);
-               }).findAny().get();
-
-   }*/
 }
